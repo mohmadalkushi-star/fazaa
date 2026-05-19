@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="card p-4">
+            <h3 class="fw-bold mb-1">أضف أداة 🛠️</h3>
+            <p class="text-muted mb-4">
+                ستُنشر في: 
+                <strong>{{ request.user.profile.city }}</strong> — 
+                <strong>{{ request.user.profile.neighborhood }}</strong>
+            </p>
+
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label class="form-label">اسم الأداة</label>
+                    <input type="text" name="name" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">الوصف</label>
+                    <textarea name="description" class="form-control" rows="3" required></textarea>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">التصنيف</label>
+                        <select name="category" class="form-select" required>
+                            <option value="electric">كهربائية</option>
+                            <option value="manual">يدوية</option>
+                            <option value="outdoor">برية / رحلات</option>
+                            <option value="other">أخرى</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">الحالة</label>
+                        <select name="condition" class="form-select" required>
+                            <option value="excellent">ممتازة</option>
+                            <option value="good">جيدة</option>
+                            <option value="fair">مقبولة</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <div class="form-check">
+                        <input type="checkbox" name="is_free" class="form-check-input" id="isFree">
+                        <label class="form-check-label" for="isFree">
+                            فزعة خير مجانية 🤝
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mb-4" id="priceField">
+                    <label class="form-label">السعر (ريال / يوم)</label>
+                    <input type="number" name="price" class="form-control" value="0">
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">صورة الأداة</label>
+                    <input type="file" name="image" class="form-control" accept="image/*">
+                </div>
+
+                <button type="submit" class="btn btn-fazaa w-100">نشر الأداة 🚀</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('isFree').addEventListener('change', function() {
+    document.getElementById('priceField').style.display = this.checked ? 'none' : 'block';
+});
+</script>
+{% endblock %}

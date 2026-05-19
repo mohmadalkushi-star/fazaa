@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3 class="fw-bold mb-4">لوحتي 🎛️</h3>
+
+<div class="row g-4">
+
+    <!-- طلباتي -->
+    <div class="col-md-6">
+        <div class="card p-4">
+            <h5 class="fw-bold mb-3">طلباتي 📨</h5>
+            {% for req in my_requests %}
+                <div class="border rounded p-3 mb-2">
+                    <strong>{{ req.item.name }}</strong>
+                    <span class="badge bg-secondary float-start">{{ req.get_status_display }}</span>
+                    <p class="text-muted small mb-0">{{ req.start_date }} ← {{ req.end_date }}</p>
+
+                    {% if req.status == 'returned' and not req.review %}
+                        <a href="{% url 'add-review' req.pk %}" class="btn btn-warning btn-sm mt-2">
+                            قيّم التجربة ⭐
+                        </a>
+                    {% elif req.status == 'returned' and req.review %}
+                        <span class="badge bg-success mt-2">قيّمت ✅ {{ req.review.rating }}⭐</span>
+                    {% endif %}
+                </div>
+            {% empty %}
+                <p class="text-muted">ما أرسلت أي طلب بعد</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- أدواتي -->
+    <div class="col-md-6">
+        <div class="card p-4">
+            <h5 class="fw-bold mb-3">أدواتي 🛠️</h5>
+            {% for item in my_items %}
+                <div class="border rounded p-3 mb-2">
+                    <strong>{{ item.name }}</strong>
+                    {% if item.is_available %}
+                        <span class="badge bg-success float-start">متاحة</span>
+                    {% else %}
+                        <span class="badge bg-danger float-start">مستعارة</span>
+                    {% endif %}
+                </div>
+            {% empty %}
+                <p class="text-muted">ما أضفت أي أداة بعد</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- الطلبات الواردة -->
+    <div class="col-12">
+        <div class="card p-4">
+            <h5 class="fw-bold mb-3">طلبات واردة على أدواتي 📥</h5>
+            {% for req in incoming %}
+                <div class="border rounded p-3 mb-2">
+                    <strong>{{ req.borrower.username }}</strong> يطلب
+                    <strong>{{ req.item.name }}</strong>
+                    <span class="badge bg-warning text-dark float-start">{{ req.get_status_display }}</span>
+                    <p class="text-muted small mb-0">{{ req.start_date }} ← {{ req.end_date }}</p>
+
+                    {% if req.status == 'pending' %}
+                        <div class="mt-2 d-flex gap-2">
+                            <a href="{% url 'update-request' req.pk 'accept' %}" class="btn btn-success btn-sm">قبول ✅</a>
+                            <a href="{% url 'update-request' req.pk 'reject' %}" class="btn btn-danger btn-sm">رفض ❌</a>
+                        </div>
+                    {% elif req.status == 'accepted' %}
+                        <a href="{% url 'update-request' req.pk 'returned' %}" class="btn btn-warning btn-sm mt-2">تم الإرجاع 🔄</a>
+                    {% endif %}
+                </div>
+            {% empty %}
+                <p class="text-muted">ما فيه طلبات واردة</p>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}

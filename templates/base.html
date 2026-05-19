@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>فزعة</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; font-family: 'Segoe UI', sans-serif; }
+        .navbar { background-color: #1a1a2e; }
+        .navbar-brand { color: #e94560 !important; font-weight: bold; font-size: 1.5rem; }
+        .nav-link { color: #fff !important; }
+        .btn-fazaa { background-color: #e94560; color: white; border: none; }
+        .btn-fazaa:hover { background-color: #c73652; color: white; }
+        .card { border: none; border-radius: 15px; box-shadow: 0 2px 15px rgba(0,0,0,0.08); }
+        footer { background-color: #1a1a2e; color: #aaa; }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg mb-4">
+    <div class="container">
+        <a class="navbar-brand" href="/">🤝 فزعة</a>
+        <div class="d-flex align-items-center gap-3">
+            {% if user.is_authenticated %}
+                <!-- صورة المستخدم واسمه -->
+                <div class="d-flex align-items-center gap-2">
+                    {% if user.profile.avatar %}
+                        <img src="{{ user.profile.avatar.url }}"
+                             class="rounded-circle" width="35" height="35"
+                             style="object-fit:cover; border:2px solid #e94560;">
+                    {% else %}
+                        <img src="https://ui-avatars.com/api/?name={{ user.username }}&background=e94560&color=fff&size=35&rounded=true"
+                             class="rounded-circle" width="35" height="35">
+                    {% endif %}
+                    <span class="text-white fw-bold">{{ user.username }}</span>
+                </div>
+
+                <a href="{% url 'add-item' %}" class="btn btn-fazaa btn-sm">+ أضف أداة</a>
+                <a href="{% url 'dashboard' %}" class="nav-link">لوحتي</a>
+                <a href="{% url 'logout' %}" class="nav-link">خروج</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="nav-link">دخول</a>
+                <a href="{% url 'register' %}" class="nav-link">تسجيل</a>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+
+<!-- المحتوى -->
+<div class="container">
+    {% block content %}
+    {% endblock %}
+</div>
+
+<!-- Footer -->
+<footer class="text-center py-4 mt-5">
+    <p class="mb-0">🤝 فزعة — نتشارك ونتعاون © 2025</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        {% if item.image %}
+            <img src="{{ item.image.url }}" class="img-fluid rounded-3 w-100">
+        {% else %}
+            <div class="bg-secondary text-white text-center py-5 rounded-3">
+                <h1>🛠️</h1>
+            </div>
+        {% endif %}
+    </div>
+    <div class="col-md-6">
+        <h2 class="fw-bold">{{ item.name }}</h2>
+        <p class="text-muted">📍 {{ item.neighborhood }}</p>
+        <p>{{ item.description }}</p>
+        <p>الحالة: <strong>{{ item.get_condition_display }}</strong></p>
+        <p>التصنيف: <strong>{{ item.get_category_display }}</strong></p>
+
+        {% if item.is_free %}
+            <h4 class="text-success">فزعة خير مجانية 🤝</h4>
+        {% else %}
+            <h4 class="text-primary">{{ item.price }} ريال / يوم</h4>
+        {% endif %}
+
+        {% if user.is_authenticated %}
+            <a href="{% url 'send-request' item.pk %}" class="btn btn-fazaa btn-lg w-100 mt-3">
+                طلب استعارة 📨
+            </a>
+        {% else %}
+            <a href="{% url 'login' %}" class="btn btn-fazaa btn-lg w-100 mt-3">
+                سجّل دخول لطلب الاستعارة
+            </a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

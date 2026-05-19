@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card p-4">
+            <h3 class="text-center fw-bold mb-4">أهلاً بك 👋</h3>
+
+            {% if error %}
+                <div class="alert alert-danger">{{ error }}</div>
+            {% endif %}
+
+            <form method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label">اسم المستخدم</label>
+                    <input type="text" name="username" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">كلمة المرور</label>
+                    <input type="password" name="password" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-fazaa w-100">دخول</button>
+            </form>
+
+            <p class="text-center mt-3">
+                ما عندك حساب؟ <a href="{% url 'register' %}">سجّل الآن</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

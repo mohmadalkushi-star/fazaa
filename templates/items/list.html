@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- العنوان -->
+<div class="row mb-4">
+    <div class="col">
+        <h3 class="fw-bold">🛠️ الأدوات المتاحة</h3>
+    </div>
+</div>
+
+<!-- الفلتر -->
+<form method="GET" class="row g-3 mb-4">
+
+    <!-- فلتر المدينة -->
+    <div class="col-md-3">
+        <select name="city" id="cityFilter" class="form-select">
+            <option value="">كل المدن</option>
+            {% for c in cities %}
+                <option value="{{ c }}" {% if request.GET.city == c %}selected{% endif %}>
+                    {{ c }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- فلتر الحي -->
+    <div class="col-md-3">
+        <select name="neighborhood" class="form-select">
+            <option value="">كل الأحياء</option>
+            {% for n in neighborhoods %}
+                <option value="{{ n }}" {% if request.GET.neighborhood == n %}selected{% endif %}>
+                    {{ n }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- فلتر التصنيف -->
+    <div class="col-md-3">
+        <select name="category" class="form-select">
+            <option value="">كل التصنيفات</option>
+            <option value="electric" {% if request.GET.category == 'electric' %}selected{% endif %}>كهربائية</option>
+            <option value="manual"   {% if request.GET.category == 'manual' %}selected{% endif %}>يدوية</option>
+            <option value="outdoor"  {% if request.GET.category == 'outdoor' %}selected{% endif %}>برية / رحلات</option>
+            <option value="other"    {% if request.GET.category == 'other' %}selected{% endif %}>أخرى</option>
+        </select>
+    </div>
+
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-fazaa w-100">فلتر</button>
+    </div>
+
+</form>
+
+<!-- قائمة الأدوات -->
+<div class="row g-4">
+    {% for item in items %}
+    <div class="col-md-4">
+        <div class="card h-100">
+            {% if item.image %}
+                <img src="{{ item.image.url }}" class="card-img-top"
+                     style="height:200px; object-fit:cover; border-radius:15px 15px 0 0;">
+            {% else %}
+                <div class="bg-secondary text-white text-center py-5 rounded-top">
+                    <h1>🛠️</h1>
+                </div>
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title fw-bold">{{ item.name }}</h5>
+                <p class="text-muted small">🏙️ {{ item.city }} — 📍 {{ item.neighborhood }}</p>
+                <p class="card-text">{{ item.description|truncatewords:15 }}</p>
+                {% if item.is_free %}
+                    <span class="badge bg-success fs-6">فزعة خير 🤝</span>
+                {% else %}
+                    <span class="badge bg-primary fs-6">{{ item.price }} ريال / يوم</span>
+                {% endif %}
+            </div>
+            <div class="card-footer bg-transparent border-0 pb-3">
+                <a href="{% url 'item-detail' item.pk %}" class="btn btn-fazaa w-100">عرض التفاصيل</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+        <div class="col text-center py-5">
+            <h4 class="text-muted">لا توجد أدوات متاحة حالياً 😔</h4>
+        </div>
+    {% endfor %}
+</div>
+
+<script>
+// لما يختار مدينة، يحدّث قائمة الأحياء تلقائياً
+document.getElementById('cityFilter').addEventListener('change', function() {
+    const form = this.closest('form');
+    form.querySelector('[name="neighborhood"]').value = '';
+    form.submit();
+});
+</script>
+
+{% endblock %}
