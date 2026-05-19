@@ -77,19 +77,30 @@ WSGI_APPLICATION = 'fazaa_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'fazaa_db',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'localhost',
-        'PORT': '3306',
-        'OPTIONS': {
-            'sql_mode': 'STRICT_TRANS_TABLES',
-        },
+
+import dj_database_url
+
+# إعدادات قاعدة البيانات الذكية (تتعرف على البيئة تلقائياً)
+if os.environ.get('MYSQL_URL'):
+    # إذا كان المشروع شغال أونلاين على Railway
+    DATABASES = {
+        'default': dj_database_url.parse(os.environ.get('MYSQL_URL'))
     }
-}
+else:
+    # إذا كان المشروع شغال على جهازك المحلي (XAMPP)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'fazaa_db',
+            'USER': 'root',
+            'PASSWORD': '',
+            'HOST': 'localhost',
+            'PORT': '3306',
+            'OPTIONS': {
+                'sql_mode': 'STRICT_TRANS_TABLES',
+            },
+        }
+    }
 
 
 # Password validation
